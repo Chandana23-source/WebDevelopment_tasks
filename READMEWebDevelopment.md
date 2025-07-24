@@ -59,5 +59,5 @@ git clone https://github.com/your-username/WebDevelopment_tasks.git
 
 ## Author
 
-Developed by Chandana  
+Developed by Chandana Gowri D A
 Focus: Simple front-end tools with practical interactivity and user-friendly design.
