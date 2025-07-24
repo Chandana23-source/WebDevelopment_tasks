@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Account & Login</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #d1c4e9, #b39ddb, #9575cd);
+      color: #333;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background 0.4s ease;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 16px;
+      width: 360px;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      animation: fadeSlide 0.5s ease-out;
+    }
+
+    h2 {
+      color: #5e35b1;
+      margin-bottom: 16px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 6px;
+      background: #f3e5f5;
+      color: #333;
+      font-size: 14px;
+      transition: background 0.3s ease;
+    }
+
+    input:focus {
+      background: #e1bee7;
+      outline: none;
+    }
+
+    input.error {
+      border: 2px solid #d32f2f;
+      animation: shake 0.3s;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(to right, #7e57c2, #ab47bc);
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 15px;
+      margin-top: 12px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.04);
+    }
+
+    a {
+      color: #6a1b9a;
+      font-size: 13px;
+      text-decoration: none;
+      display: block;
+      margin-top: 12px;
+      cursor: pointer;
+    }
+
+    .error-msg {
+      color: #d32f2f;
+      font-size: 13px;
+      margin: 8px 0;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 6px;
+    }
+
+    .success-msg {
+      font-size: 1em;
+      margin-bottom: 20px;
+      color: #4c4c4c;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+
+    .back-link {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #6a1b9a;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Create Account -->
+  <div id="createPage" class="container">
+    <h2>Create Account</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="email" id="email" placeholder="Email Address" />
+    <input type="password" id="password" placeholder="Password" />
+    <p class="hint">Format: <b>Abhi@123</b> (Uppercase, lowercase, number, symbol, 6+ chars)</p>
+    <p id="createError" class="error-msg"></p>
+    <button onclick="createAccount()">Create Account</button>
+    <a onclick="goToLogin()" href="javascript:void(0)">Already have an account? Login here →</a>
+  </div>
+
+  <!-- Created Success -->
+  <div id="createdPage" class="container hidden">
+    <h2>Account Created ✔</h2>
+    <p class="success-msg">You can now login using your credentials.</p>
+    <button onclick="goToLogin()">Go to Login</button>
+  </div>
+
+  <!-- Login -->
+  <div id="loginPage" class="container hidden">
+    <h2>Login</h2>
+    <input type="email" id="loginEmail" placeholder="Email Address" />
+    <input type="password" id="loginPassword" placeholder="Password" />
+    <p id="loginError" class="error-msg"></p>
+    <button onclick="login()">Sign In</button>
+    <a onclick="showPage('createPage')" href="javascript:void(0)">← Don’t have an account? Create one</a>
+  </div>
+
+  <!-- Login Success -->
+  <div id="successPage" class="container hidden">
+    <h2>Welcome Back 🎉</h2>
+    <p class="success-msg">Glad to see you again!</p>
+    <div class="back-link" onclick="showPage('createPage')">← Create another account</div>
+  </div>
+
+  <script>
+    let savedEmail = "";
+    let savedPassword = "";
+
+    function showPage(id) {
+      ['createPage', 'createdPage', 'loginPage', 'successPage'].forEach(page =>
+        document.getElementById(page).classList.add('hidden')
+      );
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function goToLogin() {
+      showPage('loginPage');
+    }
+
+    function createAccount() {
+      const username = document.getElementById('username');
+      const email = document.getElementById('email');
+      const password = document.getElementById('password');
+      const errorMsg = document.getElementById('createError');
+
+      username.classList.remove("error");
+      email.classList.remove("error");
+      password.classList.remove("error");
+      errorMsg.textContent = "";
+
+      const validPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/;
+
+      if (!username.value || !email.value || !password.value) {
+        errorMsg.textContent = "All fields are required!";
+        if (!username.value) username.classList.add("error");
+        if (!email.value) email.classList.add("error");
+        if (!password.value) password.classList.add("error");
+      } else if (!validPassword.test(password.value)) {
+        errorMsg.textContent = "Password needs upper, lower, digit & symbol!";
+        password.classList.add("error");
+      } else {
+        savedEmail = email.value.trim();
+        savedPassword = password.value.trim();
+        showPage('createdPage');
+      }
+    }
+
+    function login() {
+      const email = document.getElementById('loginEmail');
+      const password = document.getElementById('loginPassword');
+      const errorMsg = document.getElementById('loginError');
+
+      email.classList.remove("error");
+      password.classList.remove("error");
+      errorMsg.textContent = "";
+
+      if (!email.value || !password.value) {
+        errorMsg.textContent = "Both fields are required!";
+        if (!email.value) email.classList.add("error");
+        if (!password.value) password.classList.add("error");
+      } else if (email.value.trim() !== savedEmail || password.value.trim() !== savedPassword) {
+        errorMsg.textContent = "Incorrect email or password!";
+        email.classList.add("error");
+        password.classList.add("error");
+      } else {
+        showPage('successPage');
+      }
+    }
+  </script>
+</body>
+</html>
