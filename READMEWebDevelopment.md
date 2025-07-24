@@ -27,7 +27,7 @@ Upon successful login, a confirmation alert is displayed.
 Open `login.html` in any browser. Fill in details and click submit to test login flow and alerts.
 
 
-Tas2:
+Task2:
 ## 2. Multi-Platform Music Link Detector
 
 **File:** `music.html`
